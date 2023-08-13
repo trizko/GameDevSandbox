@@ -3,15 +3,18 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
-	[SerializeField] float moveSpeed = 8f;
+	[SerializeField] float walkSpeed = 3f;
+	[SerializeField] float runSpeed = 6f;
 	[SerializeField] float lookSensitivity = 0.1f;
-	[SerializeField] float jumpForce = 25f;
+	[SerializeField] float jumpForce = 4f;
 
 	Rigidbody rigidBody;
 	Camera playerCamera;
+	Animator animator;
 
 	Vector2 moveInputVector;
 	Vector2 lookInputVector;
+	float currentSpeed;
 
 	bool isGrounded = true;
 
@@ -31,7 +34,9 @@ public class PlayerController : MonoBehaviour
 
 	void Start()
 	{
+		currentSpeed = walkSpeed;
 		Cursor.lockState = CursorLockMode.Locked;
+		animator = GetComponent<Animator>();
 		rigidBody = GetComponent<Rigidbody>();
 		playerCamera = GetComponentInChildren<Camera>();
 	}
@@ -50,12 +55,20 @@ public class PlayerController : MonoBehaviour
 	{
 		if (isGrounded)
 		{
+			if (moveInputVector == Vector2.zero)
+			{
+				animator.SetBool("isWalking", false);
+			}
+			else
+			{
+				animator.SetBool("isWalking", true);
+			}
 			Vector3 inputDirection = new Vector3(moveInputVector.x, 0, moveInputVector.y);      // input direction
 			Vector3 worldSceneDirection = transform.TransformDirection(inputDirection);         // world space direction
 
-			float velocityX = worldSceneDirection.x * moveSpeed;
+			float velocityX = worldSceneDirection.x * currentSpeed;
 			float velocityY = rigidBody.velocity.y;
-			float velocityZ = worldSceneDirection.z * moveSpeed;
+			float velocityZ = worldSceneDirection.z * currentSpeed;
 
 			rigidBody.velocity = new Vector3(velocityX, velocityY, velocityZ);
 		}
@@ -80,19 +93,31 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
-	// Called by InputSystem on the Player prefab via SendMessage()
 	void OnMove(InputValue value)
 	{
 		moveInputVector = value.Get<Vector2>();
 	}
 
-	// Called by InputSystem on the Player prefab via SendMessage()
+	void OnRun(InputValue value)
+	{
+		if (value.isPressed)
+		{
+			animator.SetBool("isRunning", true);
+			currentSpeed = runSpeed;
+		}
+		else
+		{
+			animator.SetBool("isRunning", false);
+			currentSpeed = walkSpeed;
+		}
+
+	}
+
 	void OnLook(InputValue value)
 	{
 		lookInputVector = value.Get<Vector2>();
 	}
 
-	// Called by InputSystem on the Player prefab via SendMessage()
 	void OnJump(InputValue value)
 	{
 		if (value.isPressed)
@@ -101,7 +126,6 @@ public class PlayerController : MonoBehaviour
 		}
 	}
 
-	// Called when an attached Collider contacts another Collider
 	void OnCollisionEnter(Collision collision)
 	{
 		if (collision.collider.gameObject.transform.tag == "Ground")
