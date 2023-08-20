@@ -62,24 +62,18 @@ public class PlayerController : MonoBehaviour
 			if (moveInputVector == Vector2.zero)
 			{
 				animator.SetBool("isWalking", false);
+				currentSpeed -= acceleration * Time.deltaTime;
+				currentSpeed = Mathf.Max(currentSpeed, 0f);
 			}
 			else
 			{
 				animator.SetBool("isWalking", true);
+				currentSpeed += acceleration * Time.deltaTime;
+				currentSpeed = Mathf.Min(currentSpeed, maxSpeed);
 			}
 			Vector3 inputDirection = new Vector3(moveInputVector.x, 0, moveInputVector.y);      // input direction
 			Vector3 worldSceneDirection = transform.TransformDirection(inputDirection);         // world space direction
 
-			if (moveInputVector != Vector2.zero)
-			{
-				currentSpeed += acceleration * Time.deltaTime;
-				currentSpeed = Mathf.Min(currentSpeed, maxSpeed);
-			}
-			else if (moveInputVector == Vector2.zero)
-			{
-				currentSpeed -= acceleration * Time.deltaTime;
-				currentSpeed = Mathf.Max(currentSpeed, 0f);
-			}
 			Debug.Log("currentSpeed: " + currentSpeed);
 
 			float velocityX = worldSceneDirection.x * currentSpeed;
