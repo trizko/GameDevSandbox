@@ -556,6 +556,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   walkSpeed: 3
   runSpeed: 6
+  acceleration: 10
   lookSensitivity: 0.1
   jumpForce: 4
 --- !u!4 &1962671017 stripped

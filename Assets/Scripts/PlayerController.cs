@@ -5,6 +5,7 @@ public class PlayerController : MonoBehaviour
 {
 	[SerializeField] float walkSpeed = 3f;
 	[SerializeField] float runSpeed = 6f;
+	[SerializeField] float acceleration = 10f;
 	[SerializeField] float lookSensitivity = 0.1f;
 	[SerializeField] float jumpForce = 4f;
 
@@ -15,6 +16,7 @@ public class PlayerController : MonoBehaviour
 	Vector2 moveInputVector;
 	Vector2 lookInputVector;
 	float currentSpeed;
+	float maxSpeed;
 
 	bool isGrounded = true;
 
@@ -34,7 +36,9 @@ public class PlayerController : MonoBehaviour
 
 	void Start()
 	{
-		currentSpeed = walkSpeed;
+		currentSpeed = 0f;
+		maxSpeed = walkSpeed;
+
 		Cursor.lockState = CursorLockMode.Locked;
 		animator = GetComponent<Animator>();
 		rigidBody = GetComponent<Rigidbody>();
@@ -65,6 +69,18 @@ public class PlayerController : MonoBehaviour
 			}
 			Vector3 inputDirection = new Vector3(moveInputVector.x, 0, moveInputVector.y);      // input direction
 			Vector3 worldSceneDirection = transform.TransformDirection(inputDirection);         // world space direction
+
+			if (moveInputVector != Vector2.zero)
+			{
+				currentSpeed += acceleration * Time.deltaTime;
+				currentSpeed = Mathf.Min(currentSpeed, maxSpeed);
+			}
+			else if (moveInputVector == Vector2.zero)
+			{
+				currentSpeed -= acceleration * Time.deltaTime;
+				currentSpeed = Mathf.Max(currentSpeed, 0f);
+			}
+			Debug.Log("currentSpeed: " + currentSpeed);
 
 			float velocityX = worldSceneDirection.x * currentSpeed;
 			float velocityY = rigidBody.velocity.y;
@@ -103,12 +119,12 @@ public class PlayerController : MonoBehaviour
 		if (value.isPressed)
 		{
 			animator.SetBool("isRunning", true);
-			currentSpeed = runSpeed;
+			maxSpeed = runSpeed;
 		}
 		else
 		{
 			animator.SetBool("isRunning", false);
-			currentSpeed = walkSpeed;
+			maxSpeed = walkSpeed;
 		}
 
 	}
