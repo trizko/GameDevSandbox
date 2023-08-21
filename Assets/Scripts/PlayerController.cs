@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
 	Animator animator;
 
 	Vector2 moveInputVector;
+	Vector2 prevMoveInputVector;
 	Vector2 lookInputVector;
 	float currentSpeed;
 	float maxSpeed;
@@ -59,6 +60,7 @@ public class PlayerController : MonoBehaviour
 	{
 		if (isGrounded)
 		{
+			Vector3 inputDirection;
 			if (moveInputVector == Vector2.zero)
 			{
 				animator.SetBool("isWalking", false);
@@ -71,9 +73,16 @@ public class PlayerController : MonoBehaviour
 				currentSpeed += acceleration * Time.deltaTime;
 				currentSpeed = Mathf.Min(currentSpeed, maxSpeed);
 			}
-			Vector3 inputDirection = new Vector3(moveInputVector.x, 0, moveInputVector.y);      // input direction
-			Vector3 worldSceneDirection = transform.TransformDirection(inputDirection);         // world space direction
 
+			if (moveInputVector == Vector2.zero && rigidBody.velocity != Vector3.zero)
+			{
+				inputDirection = new Vector3(prevMoveInputVector.x, 0, prevMoveInputVector.y);
+			}
+			else
+			{
+				inputDirection = new Vector3(moveInputVector.x, 0, moveInputVector.y);
+			}
+			Vector3 worldSceneDirection = transform.TransformDirection(inputDirection);
 			Debug.Log("currentSpeed: " + currentSpeed);
 
 			float velocityX = worldSceneDirection.x * currentSpeed;
@@ -106,7 +115,9 @@ public class PlayerController : MonoBehaviour
 
 	void OnMove(InputValue value)
 	{
-		moveInputVector = value.Get<Vector2>();
+		Vector2 newInputVector = value.Get<Vector2>();
+		prevMoveInputVector = moveInputVector;
+		moveInputVector = newInputVector;
 	}
 
 	void OnRun(InputValue value)
