@@ -100,6 +100,7 @@ public class PlayerController : MonoBehaviour
 		{
 			rigidBody.velocity = new Vector3(rigidBody.velocity.x, jumpForce, rigidBody.velocity.z);
 			isGrounded = false;
+			animator.SetBool("isJumping", true);
 		}
 	}
 
@@ -140,6 +141,7 @@ public class PlayerController : MonoBehaviour
 	{
 		if (collision.collider.gameObject.transform.tag == "Ground")
 		{
+			animator.SetBool("isJumping", false);
 			isGrounded = true;
 		}
 	}
