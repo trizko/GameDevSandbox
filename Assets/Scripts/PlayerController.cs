@@ -1,13 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using FishNet.Connection;
+using FishNet.Object;
 
-public class PlayerController : MonoBehaviour
+public class PlayerController : NetworkBehaviour
 {
 	[SerializeField] float walkSpeed = 3f;
 	[SerializeField] float runSpeed = 6f;
 	[SerializeField] float acceleration = 10f;
 	[SerializeField] float lookSensitivity = 0.1f;
 	[SerializeField] float jumpForce = 4f;
+	[SerializeField] float playerCameraOffset = 1.5f;
 
 	Rigidbody rigidBody;
 	Camera playerCamera;
@@ -20,6 +23,21 @@ public class PlayerController : MonoBehaviour
 	float maxSpeed;
 
 	bool isGrounded = true;
+
+	public override void OnStartClient()
+	{
+		base.OnStartClient();
+		if (base.IsOwner)
+		{
+			playerCamera = Camera.main;
+			playerCamera.transform.position = new Vector3(transform.position.x, transform.position.y + playerCameraOffset, transform.position.z);
+			playerCamera.transform.SetParent(transform);
+		}
+		else
+		{
+			gameObject.GetComponent<PlayerController>().enabled = false;
+		}
+	}
 
 	public Vector3 ClampViewAngle(Transform playerCamera)
 	{
@@ -43,7 +61,6 @@ public class PlayerController : MonoBehaviour
 		Cursor.lockState = CursorLockMode.Locked;
 		animator = GetComponent<Animator>();
 		rigidBody = GetComponent<Rigidbody>();
-		playerCamera = GetComponentInChildren<Camera>();
 	}
 
 	void Update()
