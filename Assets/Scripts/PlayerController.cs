@@ -100,7 +100,6 @@ public class PlayerController : NetworkBehaviour
 				inputDirection = new Vector3(moveInputVector.x, 0, moveInputVector.y);
 			}
 			Vector3 worldSceneDirection = transform.TransformDirection(inputDirection);
-			Debug.Log("currentSpeed: " + currentSpeed);
 
 			float velocityX = worldSceneDirection.x * currentSpeed;
 			float velocityY = rigidBody.velocity.y;

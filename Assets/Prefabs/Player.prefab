@@ -94,7 +94,15 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a31b5b727489dee48b3dc3f8a05fc038, type: 3}
       insertIndex: -1
       addedObject: {fileID: 5848186548311886970}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: a31b5b727489dee48b3dc3f8a05fc038, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 4494100224238173773}
   m_SourcePrefab: {fileID: 100100000, guid: a31b5b727489dee48b3dc3f8a05fc038, type: 3}
+--- !u!95 &1696692057914932618 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5866666021909216657, guid: a31b5b727489dee48b3dc3f8a05fc038, type: 3}
+  m_PrefabInstance: {fileID: 5107444567552966683}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &5341304445293788490 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: a31b5b727489dee48b3dc3f8a05fc038, type: 3}
@@ -170,6 +178,7 @@ MonoBehaviour:
   acceleration: 10
   lookSensitivity: 0.1
   jumpForce: 4
+  playerCameraOffset: 1.5
 --- !u!114 &8774038342248911081
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,6 +227,7 @@ MonoBehaviour:
   _networkBehaviours:
   - {fileID: 1949410014219627723}
   - {fileID: 5848186548311886970}
+  - {fileID: 4494100224238173773}
   <ParentNetworkObject>k__BackingField: {fileID: 0}
   <ChildNetworkObjects>k__BackingField: []
   SerializedTransformProperties:
@@ -229,7 +239,7 @@ MonoBehaviour:
   _initializeOrder: 0
   _defaultDespawnType: 0
   NetworkObserver: {fileID: 0}
-  <PrefabId>k__BackingField: 9
+  <PrefabId>k__BackingField: 6
   <SpawnableCollectionId>k__BackingField: 0
   _scenePathHash: 584410112
   <SceneId>k__BackingField: 0
@@ -255,7 +265,7 @@ MonoBehaviour:
     Position: 1
     Rotation: 1
     Scale: 0
-  _interpolation: 2
+  _interpolation: 1
   _extrapolation: 2
   _enableTeleport: 0
   _teleportThreshold: 1
@@ -279,3 +289,24 @@ MonoBehaviour:
     X: 0
     Y: 0
     Z: 0
+--- !u!114 &4494100224238173773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5341304445293788490}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8cac635f24954048aad3a6ff9110beb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _componentIndexCache: 2
+  _addedNetworkObject: {fileID: 6740985409303782861}
+  _networkObjectCache: {fileID: 6740985409303782861}
+  IgnoredParameters: []
+  _animator: {fileID: 1696692057914932618}
+  _smoothFloats: 1
+  _interpolation: 2
+  _clientAuthoritative: 1
+  _sendToOwner: 0
