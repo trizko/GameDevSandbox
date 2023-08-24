@@ -281,9 +281,9 @@ MonoBehaviour:
     Z: 1
   _synchronizeRotation: 1
   _rotationSnapping:
-    X: 0
-    Y: 0
-    Z: 0
+    X: 1
+    Y: 1
+    Z: 1
   _synchronizeScale: 1
   _scaleSnapping:
     X: 0
