@@ -112,12 +112,15 @@ public class PlayerController : NetworkBehaviour
 
 	void Look()
 	{
-		Vector2 delta = lookInputVector * lookSensitivity;
-		playerCamera.transform.Rotate(-delta.y, 0f, 0f);
-		playerCamera.transform.localEulerAngles = ClampViewAngle(playerCamera.transform);
-		Quaternion rigidRot = rigidBody.rotation;
-		Quaternion deltaRot = Quaternion.Euler(0f, delta.x, 0f);
-		rigidBody.MoveRotation(rigidRot * deltaRot);
+		if (base.IsOwner)
+		{
+			Vector2 delta = lookInputVector * lookSensitivity;
+			playerCamera.transform.Rotate(-delta.y, 0f, 0f);
+			playerCamera.transform.localEulerAngles = ClampViewAngle(playerCamera.transform);
+			Quaternion rigidRot = rigidBody.rotation;
+			Quaternion deltaRot = Quaternion.Euler(0f, delta.x, 0f);
+			rigidBody.MoveRotation(rigidRot * deltaRot);
+		}
 	}
 
 	void Jump()
@@ -167,6 +170,11 @@ public class PlayerController : NetworkBehaviour
 
 	void OnCollisionEnter(Collision collision)
 	{
+		if (!base.IsOwner )
+		{
+			return;
+		}
+
 		if (collision.collider.gameObject.transform.tag == "Ground")
 		{
 			animator.SetBool("isJumping", false);
