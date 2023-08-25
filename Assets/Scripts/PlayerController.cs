@@ -36,6 +36,7 @@ public class PlayerController : NetworkBehaviour
 		else
 		{
 			gameObject.GetComponent<PlayerController>().enabled = false;
+			gameObject.GetComponent<PlayerInput>().enabled = false;
 		}
 	}
 
