@@ -173,9 +173,9 @@ MonoBehaviour:
   _componentIndexCache: 0
   _addedNetworkObject: {fileID: 6740985409303782861}
   _networkObjectCache: {fileID: 6740985409303782861}
-  walkSpeed: 3
-  runSpeed: 6
-  acceleration: 10
+  walkSpeed: 2.5
+  runSpeed: 5
+  acceleration: 7.5
   lookSensitivity: 0.1
   jumpForce: 4
   playerCameraOffset: 1.5
