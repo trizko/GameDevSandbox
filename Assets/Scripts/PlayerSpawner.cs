@@ -7,44 +7,18 @@ using UnityEngine.Serialization;
 
 public class PlayerSpawner : MonoBehaviour
 {
-    #region Public.
-    /// <summary>
-    /// Called on the server when a player is spawned.
-    /// </summary>
+    // Called on the server when a player is spawned.
     public event Action<NetworkObject> OnSpawned;
-    #endregion
 
-    #region Serialized.
-    /// <summary>
-    /// Prefab to spawn for the player.
-    /// </summary>
-    [Tooltip("Prefab to spawn for the player.")]
-    [SerializeField]
-    private NetworkObject _playerPrefab;
-    /// <summary>
-    /// True to add player to the active scene when no global scenes are specified through the SceneManager.
-    /// </summary>
-    [Tooltip("True to add player to the active scene when no global scenes are specified through the SceneManager.")]
-    [SerializeField]
-    private bool _addToDefaultScene = true;
-    /// <summary>
-    /// Areas in which players may spawn.
-    /// </summary>
-    [Tooltip("Areas in which players may spawn.")]
-    [FormerlySerializedAs("_spawns")]//Remove on 2024/01/01
+    // Prefab to spawn for the player.
+    [SerializeField] private NetworkObject _playerPrefab;
+    // Areas in which players may spawn.
     public Transform[] Spawns = new Transform[0];
-    #endregion
 
-    #region Private.
-    /// <summary>
-    /// NetworkManager on this object or within this objects parents.
-    /// </summary>
+    // NetworkManager on this object or within this objects parents.
     private NetworkManager _networkManager;
-    /// <summary>
-    /// Next spawns to use.
-    /// </summary>
-    private int _nextSpawn;
-    #endregion
+    private int _nextSpawn = 0;
+
 
     private void Start()
     {
@@ -57,46 +31,44 @@ public class PlayerSpawner : MonoBehaviour
             _networkManager.SceneManager.OnClientLoadedStartScenes -= SceneManager_OnClientLoadedStartScenes;
     }
 
-
-    /// <summary>
-    /// Initializes this script for use.
-    /// </summary>
     private void InitializeOnce()
     {
         _networkManager = gameObject.GetComponent<NetworkManager>();
         if (_networkManager == null)
         {
-            Debug.LogWarning($"PlayerSpawner on {gameObject.name} cannot work as NetworkManager wasn't found on this object or within parent objects.");
+            Debug.LogWarning($"PlayerSpawner on {gameObject.name} cannot work as NetworkManager wasn't found on this object.");
             return;
         }
 
         _networkManager.SceneManager.OnClientLoadedStartScenes += SceneManager_OnClientLoadedStartScenes;
     }
 
-    /// <summary>
-    /// Called when a client loads initial scenes after connecting.
-    /// </summary>
+    // Called when a client loads initial scenes after connecting.
     private void SceneManager_OnClientLoadedStartScenes(NetworkConnection conn, bool asServer)
     {
         if (!asServer)
             return;
+
         if (_playerPrefab == null)
         {
             Debug.LogWarning($"Player prefab is empty and cannot be spawned for connection {conn.ClientId}.");
             return;
         }
 
-        Vector3 position;
-        Quaternion rotation;
-        SetSpawn(_playerPrefab.transform, out position, out rotation);
+        Transform spawn = Spawns[_nextSpawn];
+        Vector3 position = spawn.position;
+        Quaternion rotation = spawn.rotation;
 
-        NetworkObject nob = _networkManager.GetPooledInstantiated(_playerPrefab, true);
-        nob.transform.SetPositionAndRotation(position, rotation);
+        Debug.Log($"spawn position: {position}");
+
+        // Increase next spawn and reset if needed.
+        _nextSpawn++;
+        if (_nextSpawn >= Spawns.Length)
+            _nextSpawn = 0;
+
+        NetworkObject nob = _networkManager.GetPooledInstantiated(_playerPrefab, position, rotation, true);
         _networkManager.ServerManager.Spawn(nob, conn);
-
-        //If there are no global scenes 
-        if (_addToDefaultScene)
-            _networkManager.SceneManager.AddOwnerToDefaultScene(nob);
+        _networkManager.SceneManager.AddOwnerToDefaultScene(nob);
 
         OnSpawned?.Invoke(nob);
     }
@@ -106,7 +78,6 @@ public class PlayerSpawner : MonoBehaviour
         Transform result = Spawns[_nextSpawn];
         pos = result.position;
         rot = result.rotation;
-
 
         //Increase next spawn and reset if needed.
         _nextSpawn++;
