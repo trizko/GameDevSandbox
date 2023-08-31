@@ -1,14 +1,13 @@
 # top-most EditorConfig file
 root = true
 
-[*]
+# Ignore vendor packages
+[{Assets/FishNet/**,Assets/ParrelSync/**}]
+generated_code = true
+
+# C Sharp project files
+[Assets/Scripts/**.cs]
 indent_style = space
-
-[*.{json,asmdef}]
-indent_size = 2
-
-[*.cs]
-# Basic text
 indent_size = 4
 insert_final_newline = true
 max_line_length = 120
@@ -16,15 +15,6 @@ trim_trailing_whitespace = true
 charset = utf-8
 end_of_line = lf
 insert_final_newline = true
-
-# Only add settings that differs from default
-
-# Avoid "this." if not necessary
-# Keep commented until rider fixes the bug that considers this an error
-#dotnet_style_qualification_for_field = false:suggestion
-#dotnet_style_qualification_for_property = false:suggestion
-#dotnet_style_qualification_for_method = false:suggestion
-#dotnet_style_qualification_for_event = false:suggestion
 
 # Use language keywords instead of framework type names for type references
 dotnet_style_predefined_type_for_locals_parameters_members = true:suggestion
