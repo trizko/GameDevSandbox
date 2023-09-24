@@ -1,0 +1,18 @@
+[gd_scene load_steps=5 format=3 uid="uid://bh47xdacy0i6p"]
+
+[ext_resource type="Shader" path="res://dancing_godot.gdshader" id="1_j2rm7"]
+[ext_resource type="Texture2D" uid="uid://cvfpb0ahrkkuy" path="res://icon.svg" id="2_8hxgu"]
+[ext_resource type="Script" path="res://dancing_godot.gd" id="3_18660"]
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_6ply1"]
+shader = ExtResource("1_j2rm7")
+shader_parameter/iResolution = Vector2(316, 316)
+
+[node name="DancingGodot" type="TextureRect"]
+material = SubResource("ShaderMaterial_6ply1")
+offset_right = 316.0
+offset_bottom = 316.0
+texture = ExtResource("2_8hxgu")
+script = ExtResource("3_18660")
+
+[connection signal="item_rect_changed" from="." to="." method="update_aspect_ratio"]
