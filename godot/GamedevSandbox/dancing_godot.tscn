@@ -6,12 +6,12 @@
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_6ply1"]
 shader = ExtResource("1_j2rm7")
-shader_parameter/iResolution = Vector2(316, 316)
+shader_parameter/iResolution = Vector2(1314, 640)
 
 [node name="DancingGodot" type="TextureRect"]
 material = SubResource("ShaderMaterial_6ply1")
-offset_right = 316.0
-offset_bottom = 316.0
+offset_right = 1314.0
+offset_bottom = 640.0
 texture = ExtResource("2_8hxgu")
 script = ExtResource("3_18660")
 
